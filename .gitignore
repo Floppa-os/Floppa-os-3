@@ -1,41 +1,19 @@
-# Prerequisites
-*.d
+# Created by https://www.toptal.com/developers/gitignore/api/linux
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+### Linux ###
+*~
 
-# Precompiled Headers
-*.gch
-*.pch
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
 
-# Linker files
-*.ilk
+# KDE directory preferences
+.directory
 
-# Debugger Files
-*.pdb
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# debug information files
-*.dwo
+# End of https://www.toptal.com/developers/gitignore/api/linux
