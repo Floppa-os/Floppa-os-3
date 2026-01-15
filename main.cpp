@@ -1,17 +1,15 @@
 /**
- * Floppa OS 3 Prototype
- * Минимальное ядро для архитектуры x86 (32-бит).
+ * Floppa OS 3
+ * Минимальное ядро для архитектуры x86
  */
 
-// --- РУЧНОЕ ОПРЕДЕЛЕНИЕ ТИПОВ ---
-// В режиме разработки ядра у нас нет стандартных библиотек (типа <stdint.h>), 
-// поэтому мы сами говорим процессору, сколько бит занимают переменные.
+// библиотеки <stdint.h> использовать не получится
+// с помощью C вручную выставляем конфигурацию
 typedef unsigned int   uint32_t; // 32 бита (4 байта)
 typedef unsigned char  uint8_t;  // 8 бит (1 байт)
 typedef unsigned short uint16_t; // 16 бит (2 байта)
 
-// --- MULTIBOOT HEADER ---
-// Этот блок — "паспорт" ядра. Загрузчик (например, GRUB) ищет его в первых 
+// Блок памяти
 // 8 килобайтах файла, чтобы понять, что это вообще операционная система.
 struct multiboot_header {
     uint32_t magic;    // Метка: 0x1BADB002 говорит загрузчику, что мы Multiboot-совместимы.
@@ -19,7 +17,7 @@ struct multiboot_header {
     uint32_t checksum; // Проверка: magic + flags + checksum должны давать 0.
 };
 
-// Размещаем паспорт в специальной секции ".multiboot", чтобы он оказался в самом начале файла.
+// Размещаем паспорт в специальной секции ".multiboot"
 __attribute__((section(".multiboot")))
 struct multiboot_header mb = {
     .magic = 0x1BADB002U,           
@@ -29,16 +27,15 @@ struct multiboot_header mb = {
 
 // --- КОНСТАНТЫ  VGA ---
 // Текстовый режим VGA начинается по адресу 0xB8000. 
-// Писать туда — значит мгновенно выводить символы на физический монитор.
 #define VIDEO_MEMORY 0xB8000U
 #define VGA_WIDTH 80                // Стандартная ширина консоли
 #define VGA_HEIGHT 25               // Стандартная высота консоли
 
 /**
- * Рисует символ прямо в видеопамять
+ * Управление памитью VGA (простыми словами)
  */
 void vga_putchar(char c, int x, int y, uint8_t color) {
-    // volatile говорит компилятору: "Не оптимизируй это! Память может измениться сама."
+    // функция vga_putchar
     // Каждая ячейка экрана — это 2 байта: [БАЙТ ЦВЕТА][БАЙТ СИМВОЛА ASCII]
     volatile uint16_t* video = (volatile uint16_t*)VIDEO_MEMORY;
     
@@ -47,7 +44,7 @@ void vga_putchar(char c, int x, int y, uint8_t color) {
 }
 
 /**
- * Печатает строку, просто перебирая символы один за другим
+ * Печать строки
  */
 void vga_print(const char* str, int x, int y) {
     for (int i = 0; str[i] != '\0'; i++) {
@@ -69,24 +66,24 @@ extern "C" void _start(uint32_t multiboot_info, uint32_t magic) {
         goto halt_loop;
     }
 
-    // 2. Очищаем экран (заполняем всё пространство черными пробелами)
+    // 2. Очищаем экран
     for (int y = 0; y < VGA_HEIGHT; y++) {
         for (int x = 0; x < VGA_WIDTH; x++) {
             vga_putchar(' ', x, y, 0x00U); // 0x00 — черный на черном
         }
     }
 
-    // 3. Выводим текст Шлёпности
+    // При успешной загрузки
     vga_print("Floppa OS 3 Prototype Loaded!", 0, 0);
     vga_print("-----------------------------", 0, 1);
     vga_print("Status: Kernel mode active", 0, 2);
     vga_print("Wait for commands...", 0, 4);
 
 halt_loop:
-    // Чтобы процессор не "улетел" исполнять случайный мусор в памяти дальше,
-    // мы его "зацикливаем" навсегда.
-    asm volatile("cli");      // Отключаем аппаратные прерывания (чтобы никто не мешал)
+    // Оптимизация
+    // Цикл
+    asm volatile("cli");      // Отключаем аппаратные прерывания
     while (true) {
-        asm volatile("hlt");  // Переводим процессор в режим низкого энергопотребления до прерывания
+        asm volatile("hlt");  // Переводим процессор в режим низкого энергопотребления
     }
 }
