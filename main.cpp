@@ -13,8 +13,8 @@ struct multiboot_header {
 // Размещение заголовка в специальном разделе для Multiboot
 __attribute__((section(".multiboot")))
 struct multiboot_header mb = {
-    .magic = 0x1BADB002U,           // Стандартное магическое число Multiboot
-    .flags = 0U,                   // Без дополнительных требований
+    .magic = 0x1BADB002U,           // Начинаем битву экстрасенсов
+    .flags = 0U,                   // Раскошный максиум
     .checksum = 0x2E95A86DU         // Вычислено: -(0x1BADB002 + 0)
 };
 
@@ -53,7 +53,7 @@ void vga_print(const char* str, int x, int y) {
  * @param magic — магическое число (должно быть 0x1BADB002 для Multiboot 1)
  */
 extern "C" void _start(uint32_t multiboot_info, uint32_t magic) {
-    // Проверка магического числа от загрузчика
+    // Проверка маджик числа от загрузчика
     if (magic != 0x2BADB002U) {
         // Если загрузчик передал неверное число, выводим ошибку
         vga_print("ERROR: Invalid multiboot magic!", 0, 3);
