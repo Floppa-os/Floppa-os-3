@@ -1,7 +1,10 @@
 /**
  * Floppa OS 3
  * Минимальное ядро для архитектуры x86
+ * Автор: Mickredset
+ * Некомерческая кампания: Floppa os
  */
+#include <iostream>
 
 // библиотеки <stdint.h> использовать не получится
 // с помощью C вручную выставляем конфигурацию
@@ -74,10 +77,28 @@ extern "C" void _start(uint32_t multiboot_info, uint32_t magic) {
     }
 
     // При успешной загрузки
-    vga_print("Floppa OS 3 Prototype Loaded!", 0, 0);
-    vga_print("-----------------------------", 0, 1);
-    vga_print("Status: Kernel mode active", 0, 2);
+    vga_print("Floppa OS 3 kernel mode active", 0, 0);
+    vga_print("FLP OS", 0, 1);
+    vga_print("-----------------------------", 0, 2);
+    vga_print("Status: Kernel mode active", 0, 3);
     vga_print("Wait for commands...", 0, 4);
+    vga_print("Wait for commands...", 0, 5);
+    vga_print("Wait for commands...", 0, 6);
+    vga_print("Wait for commands...", 0, 7);
+    vga_print("Wait for commands...", 0, 8);
+    vga_print("C++ main.cpp", 0, 9);
+    vga_print("Wait for commands...", 0, 10);
+    vga_print("Wait for commands...", 0, 11);
+    vga_print("Wait for commands...", 0, 12);
+    vga_print("Wait for commands...", 0, 13);
+    vga_print("Wait for commands...", 0, 14);
+    vga_print("Wait for commands...", 0, 15);
+    vga_print("Wait for commands...", 0, 16);
+    vga_print("Wait for commands...", 0, 17);
+    vga_print("Wait for commands...", 0, 18);
+    vga_print("Wait for commands...", 0, 19);
+    vga_print("Wait for commands...", 0, 20);
+    
 
 halt_loop:
     // Оптимизация
