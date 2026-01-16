@@ -2,10 +2,10 @@
  * Floppa OS 3
  * Минимальное ядро для архитектуры x86
  * Автор: Mickredset
- * Некомерческая кампания: Floppa os
+ * Некомерческая компания: Floppa os
  */
 #include <iostream>
-
+#include <string>
 // библиотеки <stdint.h> использовать не получится
 // с помощью C вручную выставляем конфигурацию
 typedef unsigned int   uint32_t; // 32 бита (4 байта)
@@ -35,7 +35,7 @@ struct multiboot_header mb = {
 #define VGA_HEIGHT 25               // Стандартная высота консоли
 
 /**
- * Управление памитью VGA (простыми словами)
+ * Управление памятью VGA (простыми словами)
  */
 void vga_putchar(char c, int x, int y, uint8_t color) {
     // функция vga_putchar
@@ -76,7 +76,7 @@ extern "C" void _start(uint32_t multiboot_info, uint32_t magic) {
         }
     }
 
-    // При успешной загрузки
+    // При успешной загрузке
     vga_print("Floppa OS 3 kernel mode active", 0, 0);
     vga_print("FLP OS", 0, 1);
     vga_print("-----------------------------", 0, 2);
