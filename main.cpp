@@ -1,17 +1,18 @@
 /**
- * Floppa OS 3 Prototype
- * Минимальное ядро для архитектуры x86 (32-бит).
+ * Floppa OS 3
+ * Минимальное ядро для архитектуры x86
+ * Автор: Mickredset
+ * Некомерческая компания: Floppa os
  */
-
-// --- РУЧНОЕ ОПРЕДЕЛЕНИЕ ТИПОВ ---
-// В режиме разработки ядра у нас нет стандартных библиотек (типа <stdint.h>), 
-// поэтому мы сами говорим процессору, сколько бит занимают переменные.
+#include <iostream>
+#include <string>
+// библиотеки <stdint.h> использовать не получится
+// с помощью C вручную выставляем конфигурацию
 typedef unsigned int   uint32_t; // 32 бита (4 байта)
 typedef unsigned char  uint8_t;  // 8 бит (1 байт)
 typedef unsigned short uint16_t; // 16 бит (2 байта)
 
-// --- MULTIBOOT HEADER ---
-// Этот блок — "паспорт" ядра. Загрузчик (например, GRUB) ищет его в первых 
+// Блок памяти
 // 8 килобайтах файла, чтобы понять, что это вообще операционная система.
 struct multiboot_header {
     uint32_t magic;    // Метка: 0x1BADB002 говорит загрузчику, что мы Multiboot-совместимы.
@@ -19,7 +20,7 @@ struct multiboot_header {
     uint32_t checksum; // Проверка: magic + flags + checksum должны давать 0.
 };
 
-// Размещаем паспорт в специальной секции ".multiboot", чтобы он оказался в самом начале файла.
+// Размещаем паспорт в специальной секции ".multiboot"
 __attribute__((section(".multiboot")))
 struct multiboot_header mb = {
     .magic = 0x1BADB002U,           
@@ -27,18 +28,17 @@ struct multiboot_header mb = {
     .checksum = 0x2E95A86DU         // (-(0x1BADB002 + 0))
 };
 
-// --- КОНСТАНТЫ ВИДЕОАДАПТЕРА ---
+// --- КОНСТАНТЫ  VGA ---
 // Текстовый режим VGA начинается по адресу 0xB8000. 
-// Писать туда — значит мгновенно выводить символы на физический монитор.
 #define VIDEO_MEMORY 0xB8000U
 #define VGA_WIDTH 80                // Стандартная ширина консоли
 #define VGA_HEIGHT 25               // Стандартная высота консоли
 
 /**
- * Рисует символ прямо в видеопамять
+ * Управление памятью VGA (простыми словами)
  */
 void vga_putchar(char c, int x, int y, uint8_t color) {
-    // volatile говорит компилятору: "Не оптимизируй это! Память может измениться сама."
+    // функция vga_putchar
     // Каждая ячейка экрана — это 2 байта: [БАЙТ ЦВЕТА][БАЙТ СИМВОЛА ASCII]
     volatile uint16_t* video = (volatile uint16_t*)VIDEO_MEMORY;
     
@@ -47,7 +47,7 @@ void vga_putchar(char c, int x, int y, uint8_t color) {
 }
 
 /**
- * Печатает строку, просто перебирая символы один за другим
+ * Печать строки
  */
 void vga_print(const char* str, int x, int y) {
     for (int i = 0; str[i] != '\0'; i++) {
@@ -58,7 +58,7 @@ void vga_print(const char* str, int x, int y) {
 
 /**
  * ГЛАВНАЯ ФУНКЦИЯ ЯДРА (_start)
- * С нее начинается жизнь вашей ОС после того, как BIOS передал управление загрузчику.
+ * Начало терминала для пользователя через VGA
  */
 extern "C" void _start(uint32_t multiboot_info, uint32_t magic) {
     
@@ -69,24 +69,42 @@ extern "C" void _start(uint32_t multiboot_info, uint32_t magic) {
         goto halt_loop;
     }
 
-    // 2. Очищаем экран (заполняем всё пространство черными пробелами)
+    // 2. Очищаем экран
     for (int y = 0; y < VGA_HEIGHT; y++) {
         for (int x = 0; x < VGA_WIDTH; x++) {
             vga_putchar(' ', x, y, 0x00U); // 0x00 — черный на черном
         }
     }
 
-    // 3. Выводим текст Шлёпности
-    vga_print("Floppa OS 3 Prototype Loaded!", 0, 0);
-    vga_print("-----------------------------", 0, 1);
-    vga_print("Status: Kernel mode active", 0, 2);
+    // При успешной загрузке
+    vga_print("Floppa OS 3 kernel mode active", 0, 0);
+    vga_print("FLP OS", 0, 1);
+    vga_print("-----------------------------", 0, 2);
+    vga_print("Status: Kernel mode active", 0, 3);
     vga_print("Wait for commands...", 0, 4);
+    vga_print("Wait for commands...", 0, 5);
+    vga_print("Wait for commands...", 0, 6);
+    vga_print("Wait for commands...", 0, 7);
+    vga_print("Wait for commands...", 0, 8);
+    vga_print("C++ main.cpp", 0, 9);
+    vga_print("Wait for commands...", 0, 10);
+    vga_print("Wait for commands...", 0, 11);
+    vga_print("Wait for commands...", 0, 12);
+    vga_print("Wait for commands...", 0, 13);
+    vga_print("Wait for commands...", 0, 14);
+    vga_print("Wait for commands...", 0, 15);
+    vga_print("Wait for commands...", 0, 16);
+    vga_print("Wait for commands...", 0, 17);
+    vga_print("Wait for commands...", 0, 18);
+    vga_print("Wait for commands...", 0, 19);
+    vga_print("Wait for commands...", 0, 20);
+    
 
 halt_loop:
-    // Чтобы процессор не "улетел" исполнять случайный мусор в памяти дальше,
-    // мы его "зацикливаем" навсегда.
-    asm volatile("cli");      // Отключаем аппаратные прерывания (чтобы никто не мешал)
+    // Оптимизация
+    // Цикл
+    asm volatile("cli");      // Отключаем аппаратные прерывания
     while (true) {
-        asm volatile("hlt");  // Переводим процессор в режим низкого энергопотребления до прерывания
+        asm volatile("hlt");  // Переводим процессор в режим низкого энергопотребления
     }
 }
