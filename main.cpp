@@ -23,7 +23,7 @@ struct multiboot_header {
 // Размещаем паспорт в специальной секции ".multiboot"
 __attribute__((section(".multiboot")))
 struct multiboot_header mb = {
-    .magic = 0x1BADB002U,           
+    .magic = 0x1BADB002U,           // Битва мэджиков
     .flags = 0U,                    // Флаги не ставим, нам пока ничего не нужно от загрузчика.
     .checksum = 0x2E95A86DU         // (-(0x1BADB002 + 0))
 };

@@ -1,9 +1,15 @@
-#include <iostream>
-#include <cstring>
-#include "shell.h"
-#include "../lib/string_utils.h"
+/*Импорт библиотек*/
+#include <iostream>  // Для ввода/вывода (std::cout, std::cin)
+#include <cstring>   // Для функций работы со строками (strcmp, strncmp, strchr)
+#include "shell.h"  // Заголовочный файл для оболочки (предполагаемая декларация функций)
+#include "../lib/string_utils.h"  // Дополнительные утилиты для работы со строками
 
+/**
+ * Функция обработки команд оболочки
+ * @param command Указатель на строку с командой
+ */
 void execute_command_os(const char* command) {
+    // Проверка команды "help" — вывод справки
     if (strcmp(command, "help") == 0) {
         std::cout << "Доступные команды:\n";
         std::cout << "  help - показать эту справку\n";
@@ -11,16 +17,27 @@ void execute_command_os(const char* command) {
         std::cout << "  echo [текст] - вывести текст\n";
         std::cout << "  comparatives - показать информацию о степенях сравнения прилагательных\n";
         std::cout << "  exit - выйти из оболочки\n";
-    } else if (strcmp(command, "clear") == 0) {
-        std::system("clear"); // или "cls" для Windows
-    } else if (strncmp(command, "echo", 4) == 0) {
-        const char* space_pos = strchr(command, ' ');
-        if (space_pos) {
-            std::cout << (space_pos + 1) << "\n";
-        } else {
-            std::cout << "\n";
+        // Примечание: многократный вывод "FLP#root" выглядит избыточным
+        for (int i = 0; i < 100; ++i) {  // Пример оптимизации (вместо 100 отдельных строк)
+            std::cout << "  FLP#root\n";
         }
-    } else if (strcmp(command, "comparatives") == 0) {
+    }
+    // Проверка команды "clear" — очистка экрана
+    else if (strcmp(command, "clear") == 0) {
+        std::system("clear");  // Для Unix-систем
+        // Для Windows: std::system("cls");
+    }
+    // Проверка команды "echo" — вывод текста после пробела
+    else if (strncmp(command, "echo", 4) == 0) {
+        const char* space_pos = strchr(command, ' ');  // Поиск пробела в строке
+        if (space_pos) {
+            std::cout << (space_pos + 1) << "\n";  // Вывод текста после пробела
+        } else {
+            std::cout << "\n";  // Если текста нет — просто перевод строки
+        }
+    }
+    // Проверка команды "comparatives" — информация о степенях сравнения
+    else if (strcmp(command, "comparatives") == 0) {
         std::cout << "=== СТЕПЕНИ СРАВНЕНИЯ ПРИЛАГАТЕЛЬНЫХ ===\n\n";
         std::cout << "В английском языке есть 3 степени сравнения:\n";
         std::cout << "- Положительная (исходная форма): big, beautiful, good\n";
@@ -44,23 +61,32 @@ void execute_command_os(const char* command) {
         std::cout << "• happy → happier → the happiest\n";
         std::cout << "• modern → more modern → the most modern\n";
         std::cout << "• expensive → more expensive → the most expensive\n";
-    } else if (strcmp(command, "exit") == 0) {
+    }
+    // Проверка команды "exit" — завершение работы
+    else if (strcmp(command, "exit") == 0) {
         std::cout << "Завершение работы оболочки...\n";
-    } else {
+    }
+    // Обработка неизвестной команды
+    else {
         std::cout << "Неизвестная команда: " << command << "\n";
         std::cout << "Введите 'help' для справки.\n";
     }
 }
 
+/**
+ * Функция запуска интерактивной оболочки
+ */
 void start_shell_os() {
-    char input[256];
+    char input[256];  // Буфер для ввода команды (макс. 256 символов)
 
-    while (true) {
-        std::cout << "MyOS> ";
-        std::cin.getline(input, sizeof(input));
+    while (true) {  // Бесконечный цикл до команды "exit"
+        std::cout << "FLP#root> ";  // Приглашение к вводу
+        std::cin.getline(input, sizeof(input));  // Чтение строки с консоли
 
+        // Проверка, что ввод не пустой
         if (strlen(input) > 0) {
-            execute_command_os(input);
+            execute_command_os(input);  // Обработка команды
+            // Выход из цикла при команде "exit"
             if (strcmp(input, "exit") == 0) {
                 break;
             }
