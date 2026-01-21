@@ -1,11 +1,5 @@
 # Floppa-os-3
 Floppa os 3.1.0
-# Floppa os kernel
-<p>Floppa os! Специальная ОС на которой можно научиться программировать свои ОС на C/C++ и даже Assembler!</p>
-<hr />
-<p>Floppa is Kernel развивается сообществом!</p>
-<p>&nbsp;</p>
-<hr />
 # LibreOffice
 LibreOffice предлагает ряд преимуществ перед Microsoft Office, особенно в контексте бесплатности, гибкости, открытости и многофункциональности. Это касается как основных компонентов (Writer, Calc, Impress), так и дополнительных инструментов (Draw, Math, Base).
 
