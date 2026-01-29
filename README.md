@@ -6,5 +6,3 @@
 <p>Floppa is Kernel развивается сообществом!</p>
 <p>&nbsp;</p>
 <hr />
-<p>Floppa os 3 код представлен ниже</p>
-<p><em>Фрагмент кода shell.cpp</em></p>
